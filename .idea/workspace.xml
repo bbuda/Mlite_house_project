@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="add some features in web site">
+    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="end features">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" afterDir="false" />
     </list>
@@ -36,15 +36,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.home.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.home.executor": "Run",
+    "Python.main (1).executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "D:/aleks/PythonProjects/Mlite"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.main (1)">
     <configuration name="home" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Mlite" />
@@ -176,7 +177,23 @@
       <option name="project" value="LOCAL" />
       <updated>1710900531486</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="end add params to web site">
+      <option name="closed" value="true" />
+      <created>1710903691595</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1710903691595</updated>
+    </task>
+    <task id="LOCAL-00007" summary="end features">
+      <option name="closed" value="true" />
+      <created>1710907239991</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1710907239991</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -196,6 +213,8 @@
     <MESSAGE value="add some features for predict dataet in web site" />
     <MESSAGE value="add rooms_count feature in web site" />
     <MESSAGE value="add some features in web site" />
-    <option name="LAST_COMMIT_MESSAGE" value="add some features in web site" />
+    <MESSAGE value="end add params to web site" />
+    <MESSAGE value="end features" />
+    <option name="LAST_COMMIT_MESSAGE" value="end features" />
   </component>
 </project>
