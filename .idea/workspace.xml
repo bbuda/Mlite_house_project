@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="end features">
+    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="add preprocessing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" afterDir="false" />
     </list>
@@ -36,16 +36,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.home.executor": "Run",
-    "Python.main (1).executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "D:/aleks/PythonProjects/Mlite"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.home.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merging master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/aleks/PythonProjects/Mlite&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.main (1)">
     <configuration name="home" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Mlite" />
@@ -215,6 +215,7 @@
     <MESSAGE value="add some features in web site" />
     <MESSAGE value="end add params to web site" />
     <MESSAGE value="end features" />
-    <option name="LAST_COMMIT_MESSAGE" value="end features" />
+    <MESSAGE value="add preprocessing" />
+    <option name="LAST_COMMIT_MESSAGE" value="add preprocessing" />
   </component>
 </project>

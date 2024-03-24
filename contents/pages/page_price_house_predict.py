@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.impute import KNNImputer, SimpleImputer
+from sklearn.preprocessing import OrdinalEncoder
+
 st.set_page_config(
     page_title="RealHouse",
     page_icon="📊",
@@ -99,9 +101,9 @@ for option in options:
         data['metro'] = metro
         for m in (metro.split(',')):
             metro_distance = st.slider(f'Расстояние в км от дома до метро {m}', 1, 60)
-            i += str(metro_distance) + ', '
+            i += str(metro_distance) + ', ' * (m != metro.split((','))[-1])
             metro_transport = st.radio(f'Тип перемещения от дома до метро {m}', ["Пешком","На транспорте"])
-            ii += str(metro_transport) + ", "
+            ii += str(metro_transport) + ", " * (m != metro.split((','))[-1])
         data['metro_distance'] = i
         data['metro_transport'] = ii
     elif option == 'Район':
@@ -176,32 +178,76 @@ if flag:
     # Обновление значений 'house_age' в зависимости от статуса завершенности дома
     df.loc[(df['is_complete'] == 0) & (df['house_age'].isna()), 'house_age'] = 0
     df.loc[(df['is_complete'] == 1) & (df['house_age'].isna()), 'house_age'] = 2024 - df['completion_year']
-    df['first_floor'] = df.apply(lambda x: 1 if x.floor == 1 else 0, axis=1)
-    df['last_floor'] = df.apply(lambda x: 1 if x.floor == x.floors_number else 0, axis=1)
+    df['is_first_floor'] = df.apply(lambda x: 1 if x.floor == 1 else 0, axis=1)
+    df['is_last_floor'] = df.apply(lambda x: 1 if x.floor == x.floors_number else 0, axis=1)
     df['has_metro'] = df.apply(lambda x: 0 if pd.isna(x.metro) else 1, axis=1)
-    df['mean_metro'] = df.apply(lambda x: 0 if x.has_metro == 0 else sum(map(float, x.metro_distance.split(','))) / len(x.metro.split(',')), axis=1)
 
 
-    def calculate_mean_distance(row):
-        distances = [int(x) for x in str(row['metro_distance']).split(',') if x.isdigit()]
-        transports = str(row['metro_transport']).split(',')
-
-        total_distance = 0
-        total_transport_time = 0
-
-        for i in range(len(distances)):
-            if transports[i] == 'walk':
-                total_distance += distances[i] / 60 * 5
-            elif transports[i] == 'transport':
-                total_distance += distances[i] / 60 * 40
-                total_transport_time += (distances[i] / 60)
-
-        if len(distances) > 0:
-            return total_distance / len(distances), total_transport_time
-        else:
-            return None, None
+    def calculate_mean_metro(row):
+        if row['has_metro'] == 0:
+            return 0
+        metro_distances = row['metro_distance'].split(',')
+        metro_distances = [float(distance) for distance in metro_distances if
+                           distance.strip()]  # Исключаем пустые строки
+        if not metro_distances:
+            return 0
+        return np.mean(metro_distances)
 
 
-    df[['metro_dist', 'metro_transport_time']] = df.apply(calculate_mean_distance, axis=1, result_type='expand')
+    # Применяем функцию к DataFrame
+    df['mean_metro'] = df.apply(calculate_mean_metro, axis=1)
     st.write(df)
+    d = {'total_area': 61.1,
+         'floor': 5.0,
+         'floors_number': 15.0,
+         'house_age': 0.0,
+         'living_area': 30.0,
+         'kitchen_area': 14.6,
+         'mean_metro': 7.0}
+    df.fillna(value=d, inplace=True)
+    st.write(df)
+    dd = {'region': 'msk',
+         'rooms_count': 2.0,
+         'is_complete': 1.0,
+         'house_material': 'monolith',
+         'parking': 'open',
+         'passenger_elevator': 1.0,
+         'cargo_elevator': 1.0,
+         'is_apartments': 0.0,
+         'is_auction': 0,
+         'is_first_floor': 0,
+         'is_last_floor': 0,
+         'has_metro': 1}
+    df.fillna(value=dd, inplace=True)
+    num_f = ['total_area',
+             'floor',
+             'floors_number',
+             'house_age',
+             'living_area',
+             'kitchen_area',
+             'longitude',
+             'latitude',
+             'mean_metro',
+             ]
+    cat_f = ['region',
+             #          'decoration',
+             'rooms_count',
+             'is_complete',
+             'house_material',
+             'parking',
+             'passenger_elevator',
+             'cargo_elevator',
+             'is_apartments',
+             'is_auction',
+             'is_first_floor',
+             'is_last_floor',
+             'has_metro',
+             ]
+    df = df[num_f + cat_f].copy()
+    st.write(df)
+    st.write(len(df.columns))
+
+
+
+
 
