@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="add preprocessing and fill na values">
+    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="add models and plotly">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" afterDir="false" />
     </list>
@@ -215,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711320095523</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="add models and plotly">
+      <option name="closed" value="true" />
+      <created>1711368177262</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1711368177262</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -239,6 +247,7 @@
     <MESSAGE value="end features" />
     <MESSAGE value="add preprocessing" />
     <MESSAGE value="add preprocessing and fill na values" />
-    <option name="LAST_COMMIT_MESSAGE" value="add preprocessing and fill na values" />
+    <MESSAGE value="add models and plotly" />
+    <option name="LAST_COMMIT_MESSAGE" value="add models and plotly" />
   </component>
 </project>

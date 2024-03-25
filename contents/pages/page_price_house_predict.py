@@ -5,6 +5,8 @@ import streamlit as st
 import pandas as pd
 import catboost
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.preprocessing import OrdinalEncoder
 
@@ -108,7 +110,7 @@ for option in options:
         i, ii = '', ''
         data['metro'] = metro
         for m in (metro.split(',')):
-            metro_distance = st.slider(f'Расстояние в км от дома до метро {m}', 1, 60)
+            metro_distance = st.slider(f'Сколько минут добираться до станции {m}', 1, 60)
             i += str(metro_distance) + ', ' * (m != metro.split((','))[-1])
             metro_transport = st.radio(f'Тип перемещения от дома до метро {m}', ["Пешком","На транспорте"])
             ii += str(metro_transport) + ", " * (m != metro.split((','))[-1])
@@ -126,7 +128,7 @@ for option in options:
 if flag:
     data_lists = {key: [value] for key, value in data.items()}
     df = pd.DataFrame.from_dict(data_lists)
-    st.write(df)
+
     df['is_complete'] = df.apply(lambda x: int(x.completion_year < 2024) if pd.isna(x.is_complete) and not pd.isna(x.completion_year) else x.is_complete, axis=1)
 
     # Второй блок кода
@@ -134,7 +136,7 @@ if flag:
 
     # Третий блок кода
     df['is_complete'] = df.apply(lambda x: int(x.is_auction) if pd.isna(x.is_complete) else x.is_complete, axis=1)
-    st.write(df)
+
     df['decoration'] = df.apply(lambda x: 'without' if pd.isna(x.decoration) and not x.is_complete else x.decoration,
                                 axis=1)
     df['house_material'] = df.apply(
@@ -206,7 +208,6 @@ if flag:
 
     # Применяем функцию к DataFrame
     df['mean_metro'] = df.apply(calculate_mean_metro, axis=1)
-    st.write(df)
     d = {'total_area': 61.1,
          'floor': 5.0,
          'floors_number': 15.0,
@@ -215,7 +216,7 @@ if flag:
          'kitchen_area': 14.6,
          'mean_metro': 7.0}
     df.fillna(value=d, inplace=True)
-    st.write(df)
+
     dd = {'region': 'msk',
          'rooms_count': 2.0,
          'is_complete': 1.0,
@@ -255,58 +256,111 @@ if flag:
              ]
 
     df = df[num_f + cat_f].copy()
-    st.write(df)
+    data_before_pred = df.copy()
     # Заменяем категориальные переменные числами
     df.replace({'region': {'msk': 2, 'spb': 5, 'ekb': 0, 'nsk' : 4, 'nng' : 3, 'kzn' : 1 },
                 'house_material': {'Монолитный кирпич': 1, 'Монолит': 2, 'Кирпич': 0, 'Панель': 3},
                 'parking': {'Открытая': 2, 'Подземная': 3, 'Наземная' : 0,  'Мультиуровневая': 1},
                 # Другие категориальные переменные и их соответствия числам
                 }, inplace=True)
-    st.write(df)
-    st.write(df.dtypes)
+
+
 
     if df.iloc[0]['rooms_count'] == 1:
         model = joblib.load(open('models_configs/model_(1)rc.joblib', 'rb'))
         price_predict = model.predict(df)
-        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
-        st.write(price_predict)
+        df['price_pred'] = price_predict
+        st.subheader(f'Стоимость этой квартиры оценивается в {round(price_predict[0])} рублей')
     if df.iloc[0]['rooms_count'] == 2:
         model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
         price_predict = model.predict(df)
-        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+        df['price_pred'] = price_predict
+        st.subheader(f'Стоимость этой квартиры оценивается в {round(price_predict[0])} рублей')
     if df.iloc[0]['rooms_count'] == 3:
-        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        model = joblib.load(open('models_configs/model_(3)rc.joblib', 'rb'))
         price_predict = model.predict(df)
-        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+        df['price_pred'] = price_predict
+        st.subheader(f'Стоимость этой квартиры оценивается в {round(price_predict[0])} рублей')
     if df.iloc[0]['rooms_count'] == 4:
-        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        model = joblib.load(open('models_configs/model_(4)rc.joblib', 'rb'))
         price_predict = model.predict(df)
-        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+        df['price_pred'] = price_predict
+        st.subheader(f'Стоимость этой квартиры оценивается в  {round(price_predict[0])} рублей')
     if df.iloc[0]['rooms_count'] > 4:
-        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        model = joblib.load(open('models_configs/model_(5-6)rc.joblib', 'rb'))
         price_predict = model.predict(df)
-        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+        df['price_pred'] = price_predict
+        st.subheader(f'Стоимость этой квартиры оценивается в {round(price_predict[0])} рублей')
     import plotly.express as px
 
-
-    def plot_with_prediction_highlight(df, prediction_df):
-        fig = px.scatter(df, x='total_area', y='price', color_discrete_sequence=['blue'], title='Общая площадь и цена')
-        fig.add_scatter(x=prediction_df['total_area'], y=prediction_df['price_pred'], mode='markers',
-                        marker=dict(color='red', size=10), name='Предсказание')
-        fig.update_xaxes(title_text='Общая площадь (кв.м)')
-        fig.update_yaxes(title_text='Цена, руб.')
-        fig.show()
+    all_df = pd.read_csv('data/preprocessed_data.csv')
 
 
-    def plot_dist_with_prediction(df, prediction_df):
-        fig = px.histogram(df, x='price', color_discrete_sequence=['blue'], marginal='rug',
-                           title='Распределение цены и предсказанная цена')
+    def plot_with_prediction_highlight(all_df, df):
+        sns.set(style="whitegrid")
 
-        for _, row in prediction_df.iterrows():
-            fig.add_vline(x=row['price_pred'], line_dash='dash', line_color='red', annotation_text='Предсказанная цена')
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.scatterplot(x='total_area', y='price', data=all_df, color='blue', alpha=0.6, label='Общая выборка', ax=ax)
 
-        fig.update_layout(xaxis_title='Цена, руб.', yaxis_title='Плотность')
-        fig.show()
+        sns.scatterplot(x='total_area', y='price_pred', data=df, color='red', s=100, label='Предсказание',
+                        edgecolor='black', zorder=5, ax=ax)
+
+        plt.title('Общая площадь и цена')
+        plt.xlabel('Общая площадь (кв.м)')
+        plt.ylabel('Цена, руб.')
+        plt.legend()
+
+        st.pyplot(fig)
+
+
+    def plot_dist_with_prediction(all_df, df):
+        sns.set(style="whitegrid")
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.histplot(all_df['price'], kde=True, color="blue", label='Распределение цены', bins=30, ax=ax)
+
+        for _, row in df.iterrows():
+            plt.axvline(x=row['price_pred'], color='red', linestyle='--', linewidth=2, label='Предсказанная цена')
+
+        handles, labels = plt.gca().get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        plt.legend(by_label.values(), by_label.keys())
+
+        plt.title('Распределение цены и предсказанная цена')
+        plt.xlabel('Цена, руб.')
+        plt.ylabel('Плотность')
+
+        st.pyplot(fig)
+
+
+
+    def compare_price_to_region(all_df, df, region, dd):
+        regional_prices = all_df[all_df['region'] == region]['price']
+
+        predicted_price = df['price_pred'].iloc[0]
+
+        cheaper_than_predicted = regional_prices[regional_prices < predicted_price].count()
+        percentage_cheaper = (cheaper_than_predicted / regional_prices.count()) * 100
+
+        regions = {
+            'msk': 'Москве',
+            'spb': 'Санкт-Петербургу',
+            'ekb': 'Екатеринбургу',
+            'nsk': 'Новосибирску',
+            'nng': 'Нижнему Новгороду',
+            'kzn': 'Казани',
+        }
+
+        if percentage_cheaper > 50:
+            message = f"Ваша квартира дороже, чем {percentage_cheaper:.2f}% квартир в выборке по {regions[dd]}."
+        else:
+            message = f"Ваша квартира дешевле, чем {100 - percentage_cheaper:.2f}% квартир в выборке по {regions[dd]}."
+
+        return message
+    plot_with_prediction_highlight(all_df, df)
+    plot_dist_with_prediction(all_df, df)
+    cmp = compare_price_to_region(all_df, df, df['region'][0], data_before_pred['region'][0])
+    st.header(cmp)
 
 
 
