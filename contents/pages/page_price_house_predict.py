@@ -1,5 +1,9 @@
+import pickle
+
+import joblib
 import streamlit as st
 import pandas as pd
+import catboost
 import numpy as np
 from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.preprocessing import OrdinalEncoder
@@ -11,6 +15,10 @@ st.set_page_config(
 st.sidebar.success("Выберете интересующий раздел")
 st.title('Оценка стоимости недвижимости')
 st.subheader('Выберите параметры квартиры, значения которых вы знаете')
+st.text(''' Для более точного прогноза, пожалуйса, заполните поля с количеством комнат в квартире, 
+общей площадью, регионом расположения квартиры.
+Поле "Дом построен" обзательно для заполнения'''
+        )
 c = ['region', 'address', 'total_area', 'kitchen_area',
        'living_area', 'rooms_count', 'floor', 'floors_number', 'build_date',
        'is_complete', 'completion_year', 'house_material', 'parking',
@@ -130,16 +138,18 @@ if flag:
     df['decoration'] = df.apply(lambda x: 'without' if pd.isna(x.decoration) and not x.is_complete else x.decoration,
                                 axis=1)
     df['house_material'] = df.apply(
-        lambda x: 'panel' if pd.isna(x.house_material) and x.floors_number in (5, 9) else x.house_material, axis=1)
+        lambda x: 'Панель' if pd.isna(x.house_material) and x.floors_number in (5, 9) else x.house_material, axis=1)
 
     # Замена значений 'stalin' на 'brick' в столбце 'house_material'
-    df.loc[df['house_material'] == 'stalin', 'house_material'] = 'brick'
+    # Замена значений в столбце house_material
+    df['house_material'] = df['house_material'].replace(['Сталь', 'Газосиликатный блок'], 'Кирпич')
+    df['house_material'] = df['house_material'].replace(['Дерево', 'Старый материал'], 'Панель')
 
 
 
     def calculate_passenger_elevator(x):
         if pd.isna(x.passenger_elevator):
-            if x.floors_number in range(1, 6) and x.house_material == 'panel':
+            if x.floors_number in range(1, 6) and x.house_material == 'Панель':
                 return 0
             elif x.floors_number == 9:
                 return 1
@@ -171,7 +181,7 @@ if flag:
 
     # Применяем функцию к DataFrame
     df['cargo_elevator'] = df.apply(calculate_cargo_elevator, axis=1)
-    df['parking'] = df.apply(lambda x: 'open' if pd.isna(x.parking) else x.parking, axis=1)
+    df['parking'] = df.apply(lambda x: 'Открытая' if pd.isna(x.parking) else x.parking, axis=1)
     # Вычисление возраста дома
     df['house_age'] = 2024 - df['build_date']
 
@@ -209,8 +219,8 @@ if flag:
     dd = {'region': 'msk',
          'rooms_count': 2.0,
          'is_complete': 1.0,
-         'house_material': 'monolith',
-         'parking': 'open',
+         'house_material': 'Монолит',
+         'parking': 'Открытая',
          'passenger_elevator': 1.0,
          'cargo_elevator': 1.0,
          'is_apartments': 0.0,
@@ -243,9 +253,64 @@ if flag:
              'is_last_floor',
              'has_metro',
              ]
+
     df = df[num_f + cat_f].copy()
     st.write(df)
-    st.write(len(df.columns))
+    # Заменяем категориальные переменные числами
+    df.replace({'region': {'msk': 2, 'spb': 5, 'ekb': 0, 'nsk' : 4, 'nng' : 3, 'kzn' : 1 },
+                'house_material': {'Монолитный кирпич': 1, 'Монолит': 2, 'Кирпич': 0, 'Панель': 3},
+                'parking': {'Открытая': 2, 'Подземная': 3, 'Наземная' : 0,  'Мультиуровневая': 1},
+                # Другие категориальные переменные и их соответствия числам
+                }, inplace=True)
+    st.write(df)
+    st.write(df.dtypes)
+
+    if df.iloc[0]['rooms_count'] == 1:
+        model = joblib.load(open('models_configs/model_(1)rc.joblib', 'rb'))
+        price_predict = model.predict(df)
+        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+        st.write(price_predict)
+    if df.iloc[0]['rooms_count'] == 2:
+        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        price_predict = model.predict(df)
+        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+    if df.iloc[0]['rooms_count'] == 3:
+        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        price_predict = model.predict(df)
+        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+    if df.iloc[0]['rooms_count'] == 4:
+        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        price_predict = model.predict(df)
+        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+    if df.iloc[0]['rooms_count'] > 4:
+        model = joblib.load(open('models_configs/model_(2)rc.joblib', 'rb'))
+        price_predict = model.predict(df)
+        st.subheader(f'Стоимость этой квартиры оценивается: {round(price_predict, 2)} рублей')
+    import plotly.express as px
+
+
+    def plot_with_prediction_highlight(df, prediction_df):
+        fig = px.scatter(df, x='total_area', y='price', color_discrete_sequence=['blue'], title='Общая площадь и цена')
+        fig.add_scatter(x=prediction_df['total_area'], y=prediction_df['price_pred'], mode='markers',
+                        marker=dict(color='red', size=10), name='Предсказание')
+        fig.update_xaxes(title_text='Общая площадь (кв.м)')
+        fig.update_yaxes(title_text='Цена, руб.')
+        fig.show()
+
+
+    def plot_dist_with_prediction(df, prediction_df):
+        fig = px.histogram(df, x='price', color_discrete_sequence=['blue'], marginal='rug',
+                           title='Распределение цены и предсказанная цена')
+
+        for _, row in prediction_df.iterrows():
+            fig.add_vline(x=row['price_pred'], line_dash='dash', line_color='red', annotation_text='Предсказанная цена')
+
+        fig.update_layout(xaxis_title='Цена, руб.', yaxis_title='Плотность')
+        fig.show()
+
+
+
+
 
 
 
