@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="add models and plotly">
+    <list default="true" id="5adfeacf-f33a-4c16-87b7-0e54d2927973" name="Changes" comment="add requirements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/contents/pages/page_price_house_predict.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,9 +56,14 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/aleks/PythonProjects/Mlite&quot;
+    &quot;last_opened_file_path&quot;: &quot;D:/aleks/PythonProjects/Test&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\aleks\PythonProjects\Mlite" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.main (1)">
     <configuration name="home" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Mlite" />
@@ -223,7 +227,23 @@
       <option name="project" value="LOCAL" />
       <updated>1711368177262</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="make a litle fix">
+      <option name="closed" value="true" />
+      <created>1711373698586</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1711373698586</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add requirements">
+      <option name="closed" value="true" />
+      <created>1711373753943</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1711373753943</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -248,6 +268,8 @@
     <MESSAGE value="add preprocessing" />
     <MESSAGE value="add preprocessing and fill na values" />
     <MESSAGE value="add models and plotly" />
-    <option name="LAST_COMMIT_MESSAGE" value="add models and plotly" />
+    <MESSAGE value="make a litle fix" />
+    <MESSAGE value="add requirements" />
+    <option name="LAST_COMMIT_MESSAGE" value="add requirements" />
   </component>
 </project>
